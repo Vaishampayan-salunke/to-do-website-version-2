@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Todo & Notes App</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Theme Toggle -->
+    <div class="theme-toggle" id="theme-toggle">
+        <i class="fas fa-moon"></i>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1 class="app-title">
+                <i class="fas fa-check-circle"></i>
+                My Tasks & Notes
+            </h1>
+            <p class="app-subtitle">Organize your life, one task at a time</p>
+        </header>
+
+        <!-- Mode Selection Tabs -->
+        <div class="mode-tabs">
+            <button class="mode-tab active" data-mode="task">
+                <i class="fas fa-tasks"></i>
+                Tasks
+            </button>
+            <button class="mode-tab" data-mode="note">
+                <i class="fas fa-sticky-note"></i>
+                Notes
+            </button>
+            <div class="mode-indicator"></div>
+        </div>
+
+        <!-- ==================== TASK SECTION ==================== -->
+        <div id="task-section" class="content-section active">
+            <!-- Task Input Section -->
+            <div class="input-section">
+                <div class="input-wrapper">
+                    <input 
+                        type="text" 
+                        id="task-input" 
+                        class="task-input" 
+                        placeholder="What needs to be done?"
+                        autocomplete="off"
+                    >
+                    <input 
+                        type="datetime-local" 
+                        id="due-date-input" 
+                        class="due-date-input"
+                    >
+                </div>
+                
+                <div class="task-options">
+                    <select id="priority-select" class="priority-select">
+                        <option value="low">Low Priority</option>
+                        <option value="medium" selected>Medium Priority</option>
+                        <option value="high">High Priority</option>
+                    </select>
+                    
+                    <input 
+                        type="text" 
+                        id="category-input" 
+                        class="category-input" 
+                        placeholder="Category (optional)"
+                        autocomplete="off"
+                    >
+                    
+                    <button id="add-task-btn" class="add-task-btn">
+                        <i class="fas fa-plus"></i>
+                        Add Task
+                    </button>
+                </div>
+            </div>
+
+            <!-- Search and Filter Section -->
+            <div class="controls-section">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        id="search-input" 
+                        class="search-input" 
+                        placeholder="Search tasks..."
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">
+                        All <span class="tab-count" id="all-count">0</span>
+                    </button>
+                    <button class="filter-tab" data-filter="active">
+                        Active <span class="tab-count" id="active-count">0</span>
+                    </button>
+                    <button class="filter-tab" data-filter="completed">
+                        Completed <span class="tab-count" id="completed-count">0</span>
+                    </button>
+                    <div class="tab-indicator"></div>
+                </div>
+            </div>
+
+            <!-- Sort Options -->
+            <div class="sort-section">
+                <label for="sort-select">
+                    <i class="fas fa-sort"></i> Sort by:
+                </label>
+                <select id="sort-select" class="sort-select">
+                    <option value="date-desc">Date Added (Newest)</option>
+                    <option value="date-asc">Date Added (Oldest)</option>
+                    <option value="priority">Priority (High to Low)</option>
+                    <option value="alpha-asc">Alphabetical (A-Z)</option>
+                    <option value="alpha-desc">Alphabetical (Z-A)</option>
+                    <option value="due-date">Due Date</option>
+                </select>
+            </div>
+
+            <!-- Task Stats -->
+            <div class="stats-section">
+                <div class="stat-item">
+                    <i class="fas fa-list-check"></i>
+                    <span>Total: <strong id="total-tasks">0</strong></span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-spinner"></i>
+                    <span>Pending: <strong id="pending-tasks">0</strong></span>
+                </div>
+                <div class="stat-item">
+                    <i class="fas fa-check-double"></i>
+                    <span>Completed: <strong id="completed-tasks">0</strong></span>
+                </div>
+            </div>
+
+            <!-- Task List -->
+            <div class="task-list-wrapper">
+                <ul id="task-list" class="task-list">
+                    <!-- Tasks will be added here dynamically -->
+                </ul>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="empty-state">
+                    <img src="images/empty-state-light.jpeg" alt="No tasks" class="empty-image">
+                    <h3>No tasks yet!</h3>
+                    <p>Add a task to get started on your productivity journey.</p>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button id="clear-completed-btn" class="action-btn clear-btn">
+                    <i class="fas fa-trash-alt"></i>
+                    Clear Completed
+                </button>
+                <button id="clear-all-btn" class="action-btn clear-all-btn">
+                    <i class="fas fa-broom"></i>
+                    Clear All Tasks
+                </button>
+            </div>
+        </div>
+
+        <!-- ==================== NOTES SECTION ==================== -->
+        <div id="notes-section" class="content-section">
+            <!-- Notes Toolbar -->
+            <div class="notes-toolbar">
+                <button id="add-note-btn" class="toolbar-btn add-note-btn">
+                    <i class="fas fa-plus"></i>
+                    New Note
+                </button>
+                
+                <div class="notes-view-toggle">
+                    <button class="view-btn active" data-view="grid">
+                        <i class="fas fa-grip"></i>
+                    </button>
+                    <button class="view-btn" data-view="list">
+                        <i class="fas fa-list"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Notes Search and Filter -->
+            <div class="notes-controls">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        id="notes-search-input" 
+                        class="search-input" 
+                        placeholder="Search notes..."
+                        autocomplete="off"
+                    >
+                </div>
+
+                <div class="notes-filter">
+                    <select id="notes-folder-filter" class="notes-select">
+                        <option value="all">All Folders</option>
+                    </select>
+                    
+                    <select id="notes-tag-filter" class="notes-select">
+                        <option value="all">All Tags</option>
+                    </select>
+                    
+                    <select id="notes-sort" class="notes-select">
+                        <option value="modified-desc">Last Modified</option>
+                        <option value="created-desc">Date Created (Newest)</option>
+                        <option value="created-asc">Date Created (Oldest)</option>
+                        <option value="alpha-asc">Title (A-Z)</option>
+                        <option value="alpha-desc">Title (Z-A)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Pinned Notes -->
+            <div id="pinned-notes-section" class="notes-category">
+                <h3 class="category-title">
+                    <i class="fas fa-thumbtack"></i>
+                    Pinned Notes
+                </h3>
+                <div id="pinned-notes-grid" class="notes-grid">
+                    <!-- Pinned notes will appear here -->
+                </div>
+            </div>
+
+            <!-- All Notes -->
+            <div class="notes-category">
+                <h3 class="category-title">
+                    <i class="fas fa-folder-open"></i>
+                    All Notes
+                </h3>
+                <div id="notes-grid" class="notes-grid">
+                    <!-- Notes will be added here dynamically -->
+                </div>
+
+                <!-- Empty State for Notes -->
+                <div id="notes-empty-state" class="empty-state">
+                    <img src="images/empty-state-light.jpeg" alt="No notes" class="empty-image">
+                    <h3>No notes yet!</h3>
+                    <p>Create your first note to get started.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Celebration Overlay -->
+    <div id="celebration-overlay" class="celebration-overlay">
+        <img src="images/celebration.jpeg" alt="Celebration" class="celebration-image">
+        <h2>🎉 All Done!</h2>
+        <p>You've completed all your tasks!</p>
+    </div>
+
+    <!-- Task Edit Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <h3><i class="fas fa-edit"></i> Edit Task</h3>
+            <input type="text" id="edit-task-input" class="edit-input" placeholder="Task description">
+            <input type="datetime-local" id="edit-due-date" class="edit-input">
+            <select id="edit-priority" class="edit-select">
+                <option value="low">Low Priority</option>
+                <option value="medium">Medium Priority</option>
+                <option value="high">High Priority</option>
+            </select>
+            <input type="text" id="edit-category" class="edit-input" placeholder="Category">
+            <div class="modal-actions">
+                <button id="save-edit-btn" class="modal-btn save-btn">
+                    <i class="fas fa-save"></i> Save
+                </button>
+                <button id="cancel-edit-btn" class="modal-btn cancel-btn">
+                    <i class="fas fa-times"></i> Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Note Editor Modal -->
+    <div id="note-editor-modal" class="modal note-modal">
+        <div class="modal-content note-editor-content">
+            <div class="note-editor-header">
+                <input type="text" id="note-title-input" class="note-title-input" placeholder="Note Title">
+                <div class="note-header-actions">
+                    <button id="pin-note-btn" class="header-btn" title="Pin Note">
+                        <i class="fas fa-thumbtack"></i>
+                    </button>
+                    <button id="lock-note-btn" class="header-btn" title="Lock Note">
+                        <i class="fas fa-lock"></i>
+                    </button>
+                    <button id="close-note-btn" class="header-btn" title="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Format Toolbar -->
+            <div class="format-toolbar">
+                <div class="toolbar-group">
+                    <button class="format-btn" data-command="bold" title="Bold (Ctrl+B)">
+                        <i class="fas fa-bold"></i>
+                    </button>
+                    <button class="format-btn" data-command="italic" title="Italic (Ctrl+I)">
+                        <i class="fas fa-italic"></i>
+                    </button>
+                    <button class="format-btn" data-command="underline" title="Underline (Ctrl+U)">
+                        <i class="fas fa-underline"></i>
+                    </button>
+                    <button class="format-btn" data-command="strikeThrough" title="Strikethrough">
+                        <i class="fas fa-strikethrough"></i>
+                    </button>
+                </div>
+
+                <div class="toolbar-group">
+                    <button class="format-btn" data-command="insertUnorderedList" title="Bullet List">
+                        <i class="fas fa-list-ul"></i>
+                    </button>
+                    <button class="format-btn" data-command="insertOrderedList" title="Numbered List">
+                        <i class="fas fa-list-ol"></i>
+                    </button>
+                    <button id="toggle-checklist-btn" class="format-btn" title="Checklist">
+                        <i class="fas fa-check-square"></i>
+                    </button>
+                </div>
+
+                <div class="toolbar-group">
+                    <button class="format-btn" data-command="justifyLeft" title="Align Left">
+                        <i class="fas fa-align-left"></i>
+                    </button>
+                    <button class="format-btn" data-command="justifyCenter" title="Align Center">
+                        <i class="fas fa-align-center"></i>
+                    </button>
+                    <button class="format-btn" data-command="justifyRight" title="Align Right">
+                        <i class="fas fa-align-right"></i>
+                    </button>
+                </div>
+
+                <div class="toolbar-group">
+                    <select id="font-size-select" class="toolbar-select">
+                        <option value="1">Small</option>
+                        <option value="3" selected>Normal</option>
+                        <option value="5">Large</option>
+                        <option value="7">Huge</option>
+                    </select>
+                    
+                    <input type="color" id="text-color-picker" class="color-picker" value="#ffffff" title="Text Color">
+                    
+                    <input type="color" id="highlight-color-picker" class="color-picker" value="#ffff00" title="Highlight Color">
+                </div>
+
+                <div class="toolbar-group">
+                    <button id="insert-link-btn" class="format-btn" title="Insert Link">
+                        <i class="fas fa-link"></i>
+                    </button>
+                    <label for="image-upload-input" class="format-btn" title="Upload Image">
+                        <i class="fas fa-image"></i>
+                    </label>
+                    <input type="file" id="image-upload-input" accept="image/*" style="display: none;">
+                    <button id="voice-input-btn" class="format-btn" title="Voice Input">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Note Content Editor -->
+            <div id="note-content-editor" class="note-content-editor" contenteditable="true">
+                Start typing your note...
+            </div>
+
+            <!-- Note Metadata -->
+            <div class="note-metadata">
+                <div class="metadata-group">
+                    <label>
+                        <i class="fas fa-folder"></i>
+                        Folder:
+                    </label>
+                    <select id="note-folder-select" class="metadata-select">
+                        <option value="general">General</option>
+                    </select>
+                    <button id="add-folder-btn" class="metadata-btn">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+
+                <div class="metadata-group">
+                    <label>
+                        <i class="fas fa-tags"></i>
+                        Tags:
+                    </label>
+                    <input type="text" id="note-tags-input" class="metadata-input" placeholder="Add tags (comma separated)">
+                </div>
+
+                <div class="metadata-group">
+                    <label>
+                        <i class="fas fa-palette"></i>
+                        Color:
+                    </label>
+                    <div class="color-options">
+                        <button class="color-option" data-color="default" style="background: var(--glass-bg)"></button>
+                        <button class="color-option" data-color="red" style="background: linear-gradient(135deg, #ff6b6b, #ee5a6f)"></button>
+                        <button class="color-option" data-color="orange" style="background: linear-gradient(135deg, #ffa500, #ff8c00)"></button>
+                        <button class="color-option" data-color="yellow" style="background: linear-gradient(135deg, #ffd93d, #f9ca24)"></button>
+                        <button class="color-option" data-color="green" style="background: linear-gradient(135deg, #6bcf7f, #4cd964)"></button>
+                        <button class="color-option" data-color="blue" style="background: linear-gradient(135deg, #4facfe, #00f2fe)"></button>
+                        <button class="color-option" data-color="purple" style="background: linear-gradient(135deg, #a18cd1, #fbc2eb)"></button>
+                    </div>
+                </div>
+
+                <div class="metadata-group">
+                    <label>
+                        <i class="fas fa-bell"></i>
+                        Reminder:
+                    </label>
+                    <input type="datetime-local" id="note-reminder-input" class="metadata-input">
+                </div>
+            </div>
+
+            <!-- Note Actions -->
+            <div class="note-editor-actions">
+                <button id="save-note-btn" class="action-btn save-btn">
+                    <i class="fas fa-save"></i>
+                    Save Note
+                </button>
+                <button id="delete-note-btn" class="action-btn delete-btn">
+                    <i class="fas fa-trash"></i>
+                    Delete
+                </button>
+            </div>
+
+            <div class="note-info">
+                <small id="note-last-modified">Created: Just now</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image Editor Modal -->
+    <div id="image-editor-modal" class="modal image-modal">
+        <div class="modal-content image-editor-content">
+            <div class="image-editor-header">
+                <h3><i class="fas fa-edit"></i> Edit Image</h3>
+                <button id="close-image-editor-btn" class="header-btn">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Image Editor Toolbar -->
+            <div class="image-editor-toolbar">
+                <div class="toolbar-group">
+                    <button id="crop-btn" class="editor-tool-btn active" title="Crop">
+                        <i class="fas fa-crop"></i>
+                    </button>
+                    <button id="resize-btn" class="editor-tool-btn" title="Resize">
+                        <i class="fas fa-expand-arrows-alt"></i>
+                    </button>
+                    <button id="rotate-btn" class="editor-tool-btn" title="Rotate">
+                        <i class="fas fa-redo"></i>
+                    </button>
+                    <button id="flip-h-btn" class="editor-tool-btn" title="Flip Horizontal">
+                        <i class="fas fa-arrows-alt-h"></i>
+                    </button>
+                    <button id="flip-v-btn" class="editor-tool-btn" title="Flip Vertical">
+                        <i class="fas fa-arrows-alt-v"></i>
+                    </button>
+                </div>
+
+                <div class="toolbar-group">
+                    <label>Brightness:</label>
+                    <input type="range" id="brightness-slider" min="0" max="200" value="100">
+                    <span id="brightness-value">100</span>
+                </div>
+
+                <div class="toolbar-group">
+                    <label>Contrast:</label>
+                    <input type="range" id="contrast-slider" min="0" max="200" value="100">
+                    <span id="contrast-value">100</span>
+                </div>
+
+                <div class="toolbar-group">
+                    <label>Saturation:</label>
+                    <input type="range" id="saturation-slider" min="0" max="200" value="100">
+                    <span id="saturation-value">100</span>
+                </div>
+
+                <div class="toolbar-group">
+                    <button id="reset-filters-btn" class="editor-tool-btn" title="Reset Filters">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Crop Controls (shown when crop is active) -->
+            <div id="crop-controls" class="crop-controls">
+                <label>Aspect Ratio:</label>
+                <select id="aspect-ratio-select">
+                    <option value="free">Free</option>
+                    <option value="1:1">Square (1:1)</option>
+                    <option value="4:3">4:3</option>
+                    <option value="16:9">16:9</option>
+                    <option value="3:4">Portrait (3:4)</option>
+                    <option value="9:16">Story (9:16)</option>
+                </select>
+            </div>
+
+            <!-- Resize Controls (shown when resize is active) -->
+            <div id="resize-controls" class="resize-controls" style="display: none;">
+                <div class="resize-inputs">
+                    <div>
+                        <label>Width:</label>
+                        <input type="number" id="resize-width" min="1" value="500">
+                        <span>px</span>
+                    </div>
+                    <button id="lock-aspect-btn" class="lock-btn active">
+                        <i class="fas fa-lock"></i>
+                    </button>
+                    <div>
+                        <label>Height:</label>
+                        <input type="number" id="resize-height" min="1" value="500">
+                        <span>px</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Canvas Container -->
+            <div class="canvas-container">
+                <canvas id="image-canvas"></canvas>
+            </div>
+
+            <!-- Image Editor Actions -->
+            <div class="image-editor-actions">
+                <button id="insert-image-btn" class="action-btn save-btn">
+                    <i class="fas fa-check"></i>
+                    Insert Image
+                </button>
+                <button id="cancel-image-btn" class="action-btn cancel-btn">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
