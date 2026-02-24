@@ -1,14 +1,14 @@
 # Todo App 2.0 - 
-## 🎯 **SUMMARY OF ALL CHANGES:**
+## 🎯 SUMMARY OF ALL CHANGES:
 
-### ✅ **Fixed Issues:**
-1. **Dropdowns visibility in dark mode** - Added proper background colors for options in both themes
-2. **Sort dropdown visibility** - Same fix applied
-3. **Task metadata visibility** - Increased opacity and added brightness/saturation filters for date, category, and priority badges
-4. **"My Tasks" heading color** - Increased brightness and saturation using filter property
-5. **Added complete Notes feature** with all requested functionality
+### ✅ Fixed Issues:
+1. Dropdowns visibility in dark mode - Added proper background colors for options in both themes
+2. Sort dropdown visibility - Same fix applied
+3. Task metadata visibility - Increased opacity and added brightness/saturation filters for date, category, and priority badges
+4. "My Tasks" heading color - Increased brightness and saturation using filter property
+5. Added complete Notes feature with all requested functionality
 
-### ✅ **Notes Features Added:**
+### ✅ Notes Features Added:
 1. ✅ Separate Notes tab/mode
 2. ✅ Rich text editor with formatting (bold, italic, underline, lists, alignment)
 3. ✅ Pin notes to top
@@ -25,7 +25,7 @@
 14. ✅ Sort and filter options
 15. ✅ Timestamps (created/modified)
 
-### 📁 **File Structure (Final):**
+### 📁 File Structure (Final):
 ```
 advanced-app/
 ├── index.html
